@@ -2,7 +2,7 @@
 
 This repository is pytorch implement of ```Denoising Diffusion Probabilistic Models```.
 
-## UNet in diffusion model
+## UNet in diffusion model of default configure in this repository
 
 ### Macro model structure 
 
