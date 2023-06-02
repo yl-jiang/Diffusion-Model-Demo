@@ -30,8 +30,8 @@ python train.py
 if everything is ok, then you will see something like this:
 
 ```shell
-Logging at: Logs_Checkpoints/Inference/version_1
-Model Checkpoint at: Logs_Checkpoints/checkpoints/version_1
+Logging at: Logs_Checkpoints/Inference/version_0
+Model Checkpoint at: Logs_Checkpoints/checkpoints/version_0
 Train :: Epoch: 1/30:   9%|█▏          | 42/469 [00:06<00:49,  8.61it/s, Loss: 0.0507]
 
 ```
