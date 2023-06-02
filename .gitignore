@@ -1,0 +1,6 @@
+*.pth
+*.tar
+*.gz
+**/__pycache__
+**/MNIST
+*.ipynb_checkpoints
