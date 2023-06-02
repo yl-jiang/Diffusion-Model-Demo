@@ -2,6 +2,8 @@
 
 This repository is pytorch implement of ```Denoising Diffusion Probabilistic Models```.
 
+<div align=center><img src="./Logs_Checkpoints/Inference/version_0/30.mp4"></div>
+
 ## UNet in diffusion model of default configure in this repository
 
 ### Macro model structure 
