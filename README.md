@@ -1,5 +1,7 @@
 # Diffusion-Model-Demo
 
+This repository is pytorch implement of ```Denoising Diffusion Probabilistic Models```.
+
 ## UNet in diffusion model
 
 ### Macro model structure 
@@ -35,3 +37,9 @@ Model Checkpoint at: Logs_Checkpoints/checkpoints/version_0
 Train :: Epoch: 1/30:   9%|█▏          | 42/469 [00:06<00:49,  8.61it/s, Loss: 0.0507]
 
 ```
+
+## Reference
+
+1. [zhangbo2008 / diffusion_demo](https://github.com/zhangbo2008/diffusion_demo);
+2. [jadore801120 / attention-is-all-you-need-pytorch](https://github.com/jadore801120/attention-is-all-you-need-pytorch);
+3. [learnopencv/Guide-to-training-DDPMs-from-Scratch](https://github.com/spmallick/learnopencv/tree/master/Guide-to-training-DDPMs-from-Scratch);
