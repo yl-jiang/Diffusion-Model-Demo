@@ -135,7 +135,7 @@ class AttentionBlock(nn.Module):
     def __init__(self, channels=64):
         super().__init__()
         self.channels = channels
-        self.group_norm = nn.GroupNorm(num_groups=8, num_channels=channels)
+        self.group_norm = nn.GroupNorm(num_groups=8, num_channels=self.channels)
         self.mhsa = MultiHeadAttention(n_head=4, d_model=self.channels, d_k=self.channels//4, d_v=self.channels//4)
 
     def forward(self, x):
