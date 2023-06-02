@@ -21,10 +21,10 @@
 ## Training
 
 ```shell
-git clone https://github.com/yl-jiang/Diffusion-Model-Demo.git
-cd Diffusion-Model-Demo
-conda activate your_pytorch_environment
-python train.py
+$ git clone https://github.com/yl-jiang/Diffusion-Model-Demo.git
+$ cd Diffusion-Model-Demo
+$ conda activate your_pytorch_environment
+$ python train.py
 ```
 
 if everything is ok, then you will see something like this:
