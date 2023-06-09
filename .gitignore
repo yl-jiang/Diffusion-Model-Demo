@@ -4,3 +4,8 @@
 **/__pycache__
 **/MNIST
 *.ipynb_checkpoints
+data/**/MNIST
+data/**/cifar*
+**/Inference
+**/checkpoints
+*.mp4

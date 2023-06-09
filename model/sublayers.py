@@ -25,7 +25,7 @@ class ScaledDotProductAttention(nn.Module):
             output: (sentence_num, n_head, enc_token_num, d_v) or (sentence_num, n_head, dec_token_num, d_v)
             attn: (sentence_num, n_head, enc_token_num, enc_token_num) or (sentence_num, n_head, dec_token_num, dec_token_num) or (sentence_num, n_head, dec_token_num, enc_token_num)
         """
-        assert q.size(-1) == k.size(-2)
+        assert q.size(-1) == k.size(-1)
         #    (sentence_num, n_head, enc_token_num, d_k) & (sentence_num, n_head, d_k, enc_token_num) -> (sentence_num, n_head, enc_token_num, enc_token_num)
         # or (sentence_num, n_head, dec_token_num, d_k) & (sentence_num, n_head, d_k, dec_token_num) -> (sentence_num, n_head, dec_token_num, dec_token_num)
         # or (sentence_num, n_head, dec_token_num, d_k) & (sentence_num, n_head, d_k, enc_token_num) -> (sentence_num, n_head, dec_token_num, enc_token_num)
