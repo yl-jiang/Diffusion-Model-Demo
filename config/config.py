@@ -51,17 +51,15 @@ class SimpleDiffusion:
         self.num_diffusion_timesteps = num_diffusion_timesteps
         self.img_shape = img_shape
         self.device = device
-
         self.initialize()
 
     def initialize(self):
         # BETAs & ALPHAs required at different places in the Algorithm.
         self.beta  = self.get_betas()  # (timesteps,)
-        self.alpha = 1 - self.beta     # (timesteps,)
+        self.alpha = 1 - self.beta     # (timesteps,) / 取值范围[0.98, 0.9999]
         
-        self_sqrt_beta                = torch.sqrt(self.beta)  # (timesteps,)
-        self.alpha_cumulative         = torch.cumprod(self.alpha, dim=0)  # (timesteps,)
-        self.sqrt_alpha_bar           = torch.sqrt(self.alpha_cumulative)  # (timesteps,)
+        self.alpha_cumulative         = torch.cumprod(self.alpha, dim=0)  # (timesteps,) / [0.000040358, 0.9999]
+        self.sqrt_alpha_bar           = torch.sqrt(self.alpha_cumulative)  # (timesteps,) / [0.0064, 0.9999]
         self.one_by_sqrt_alpha        = 1. / torch.sqrt(self.alpha)  # (timesteps,)
         self.sqrt_one_minus_alpha_bar = torch.sqrt(1 - self.alpha_cumulative)  # (timesteps,)
          
@@ -70,7 +68,7 @@ class SimpleDiffusion:
         linear schedule, proposed in original ddpm paper
 
         Output:
-            beta: (1000,) / 取值范围为[0.0001, 0.02]
+            beta: (1000,) / 取值范围为[0.0001, 0.02] -> configurations of paper DDPM
         """
         scale = 1000 / self.num_diffusion_timesteps
         beta_start = scale * 1e-4

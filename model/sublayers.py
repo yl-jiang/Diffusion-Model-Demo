@@ -25,6 +25,7 @@ class ScaledDotProductAttention(nn.Module):
             output: (sentence_num, n_head, enc_token_num, d_v) or (sentence_num, n_head, dec_token_num, d_v)
             attn: (sentence_num, n_head, enc_token_num, enc_token_num) or (sentence_num, n_head, dec_token_num, dec_token_num) or (sentence_num, n_head, dec_token_num, enc_token_num)
         """
+        assert q.size(-1) == k.size(-2)
         #    (sentence_num, n_head, enc_token_num, d_k) & (sentence_num, n_head, d_k, enc_token_num) -> (sentence_num, n_head, enc_token_num, enc_token_num)
         # or (sentence_num, n_head, dec_token_num, d_k) & (sentence_num, n_head, d_k, dec_token_num) -> (sentence_num, n_head, dec_token_num, dec_token_num)
         # or (sentence_num, n_head, dec_token_num, d_k) & (sentence_num, n_head, d_k, enc_token_num) -> (sentence_num, n_head, dec_token_num, enc_token_num)
@@ -76,10 +77,10 @@ class MultiHeadAttention(nn.Module):
             q: (sentence_num, enc_token_num, embedding_size) or (sentence_num, dec_token_num, embedding_size) 
             k: (sentence_num, enc_token_num, embedding_size) or (sentence_num, dec_token_num, embedding_size) 
             v: (sentence_num, enc_token_num, embedding_size) or (sentence_num, dec_token_num, embedding_size)  
-            mask: Encoder-> (sentence_num, enc_token_num, 1) or Decoder-> (sentence_num, dec_token_num, dec_token_num)
+            mask: Encoder -> (sentence_num, enc_token_num, 1) or Decoder -> (sentence_num, dec_token_num, dec_token_num)
         Outputs:
             q: (sentence_num, enc_token_num, embedding_size) or (sentence_num, dec_token_num, embedding_size)
-            attn: (sentence_num, n_head, enc_token_num, enc_token_num) 
+            attn:  (sentence_num, n_head, enc_token_num, enc_token_num) 
                 or (sentence_num, n_head, dec_token_num, dec_token_num) 
                 or (sentence_num, n_head, dec_token_num, enc_token_num)
         """
@@ -138,7 +139,7 @@ class AttentionBlock(nn.Module):
         self.group_norm = nn.GroupNorm(num_groups=8, num_channels=self.channels)
         self.mhsa = MultiHeadAttention(n_head=4, d_model=self.channels, d_k=self.channels//4, d_v=self.channels//4)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor):
         B, _, H, W = x.shape
         h = self.group_norm(x)
         h = h.reshape(B, self.channels, H * W).swapaxes(1, 2)  # [B, C, H, W] --> [B, C, H * W] --> [B, H*W, C]
@@ -177,22 +178,29 @@ class ResnetBlock(nn.Module):
             self.attention = nn.Identity()
 
     def forward(self, x, t):
+        """
+        Inputs:
+            x: (b, c, h, w)
+            t: (b, emb_dim_exp)
+        Outputs:
+            h: (b, c2, h, w) / c2 = [c, 2c, 4c, 8c]
+        """
         # group 1
-        h = self.act_fn(self.normlize_1(x))
-        h = self.conv_1(h)
+        h = self.act_fn(self.normlize_1(x))  # (b, c, h, w)
+        h = self.conv_1(h)  # (b, c, h, w) -> (b, c2, h, w) / c2 = [c, 2c, 4c, 8c]
 
         # group 2
         # add in timestep embedding
-        h += self.dense_1(self.act_fn(t))[:, :, None, None]
+        h += self.dense_1(self.act_fn(t))[:, :, None, None]  # (b, emb_dim_exp) & (emb_dim_exp, c2) -> (b, c2) -> (b, c2, 1, 1) & (b, c2, h, w) -> (b, c2, h, w)
 
         # group 3
-        h = self.act_fn(self.normlize_2(h))
-        h = self.dropout(h)
-        h = self.conv_2(h)
+        h = self.act_fn(self.normlize_2(h))  # (b, c2, h, w)
+        h = self.dropout(h)  # (b, c2, h, w)
+        h = self.conv_2(h)  # (b, c2, h, w) -> (b, c2, h, w)
 
         # Residual and attention
-        h = h + self.match_input(x)
-        h = self.attention(h)
+        h = h + self.match_input(x)  # (b, c2, h, w) & (b, c2, h, w) -> (b, c2, h, w)
+        h = self.attention(h)  # (b, c2, h, w)
 
         return h
     
@@ -230,15 +238,21 @@ class SinusoidalPositionEmbeddings(nn.Module):
 
         ts = torch.arange(total_time_steps, dtype=torch.float32)
 
-        emb = torch.unsqueeze(ts, dim=-1) * torch.unsqueeze(emb, dim=0)
-        emb = torch.cat((emb.sin(), emb.cos()), dim=-1)
+        emb = torch.unsqueeze(ts, dim=-1) * torch.unsqueeze(emb, dim=0)  # (T, half_dim)
+        emb = torch.cat((emb.sin(), emb.cos()), dim=-1)  # (T, emb_dim)
 
         self.time_blocks = nn.Sequential(
-            nn.Embedding.from_pretrained(emb),
-            nn.Linear(in_features=time_emb_dims, out_features=time_emb_dims_exp),
-            nn.SiLU(),
-            nn.Linear(in_features=time_emb_dims_exp, out_features=time_emb_dims_exp),
+            nn.Embedding.from_pretrained(emb),  # (b, emb_dim)
+            nn.Linear(in_features=time_emb_dims, out_features=time_emb_dims_exp),  # (b, emb_dim) & (emb_dim, emb_dim_exp) -> (b, emb_dim_exp)
+            nn.SiLU(),  # (b, emb_dim_exp)
+            nn.Linear(in_features=time_emb_dims_exp, out_features=time_emb_dims_exp),  # (b, emb_dim_exp) & (emb_dim_exp, emb_dim_exp) -> (b, emb_dim_exp)
         )
 
     def forward(self, time):
+        """
+        Inputs:
+            time: timestep / int / (b)
+        Outputs:
+            position_embedding: (b, emb_dim_exp)
+        """
         return self.time_blocks(time)

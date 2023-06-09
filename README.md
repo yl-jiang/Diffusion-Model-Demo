@@ -2,25 +2,15 @@
 
 This repository is pytorch implement of ```Denoising Diffusion Probabilistic Models```.
 
-<div align=center><img src="./Logs_Checkpoints/Inference/version_0/30.mp4"></div>
-
 ## UNet in diffusion model of default configure in this repository
 
 ### Macro model structure 
 
-<div align=center><img src="./imgs/StableDiffusion-UNet.drawio.svg"></div>
+<div align=center><img src="./imgs/UNet.svg"></div>
 
-### ResnetBlock
+### Sublayers
 
-<div align=center><img src="./imgs/res.svg"></div>
-
-### ResnetBlock with Attention
-
-<div align=center><img src="./imgs/resa.svg"></div>
-
-### Final layers
-
-<div align=center><img src="./imgs/final.svg"></div>
+<div align=center><img src="./imgs/sublayers.svg"></div>
 
 ## Training
 

@@ -23,7 +23,7 @@ class UNet(nn.Module):
 
         self.first = nn.Conv2d(in_channels=input_channels, out_channels=base_channels, kernel_size=3, stride=1, padding="same")
 
-        num_resolutions = len(base_channels_multiples)
+        num_resolutions = len(base_channels_multiples)  # 4
 
         # Encoder part of the UNet. Dimension reduction.
         self.encoder_blocks = nn.ModuleList()
@@ -41,7 +41,6 @@ class UNet(nn.Module):
                     apply_attention=apply_attention[level],
                 )
                 self.encoder_blocks.append(block)
-
                 in_channels = out_channels
                 curr_channels.append(in_channels)
 
@@ -106,7 +105,7 @@ class UNet(nn.Module):
             h: (b, c, h, w)
         """
 
-        time_emb = self.timestep_embeddings(t)  # (b, emb_size)
+        time_emb = self.timestep_embeddings(t)  # (b, emb_dim_exp)
 
         h = self.first(x)  # (b, c1, h, w) -> (b, c2, h, w)
         outs = [h]
