@@ -26,12 +26,12 @@ the fllowing parameters are computing from above parametes.
 
 
 $$
-\bar{\alpha}_t = \prod_{i=1}^t{\alpha_i}
+\bar{\alpha}_t = \prod_{i=1}^t{\alpha}_i
 $$
 
 
 $$ 
-x_t = \sqrt{\bar{\alpha_t}}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon_0;\quad \epsilon_0 \sim \mathcal{N}\left(x_t; \sqrt{\bar{\alpha}_t}x_0, \left(1-\bar{\alpha_t}\right)\mathbf{I}\right)
+x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon_0;\quad \epsilon_0 \sim \mathcal{N}\left(x_t; \sqrt{\bar{\alpha}_t}x_0, \left(1-\bar{\alpha}_t\right)\mathbf{I}\right)
 $$
 
 $$
