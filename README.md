@@ -17,6 +17,7 @@ This repository is pytorch implement of ```Denoising Diffusion Probabilistic Mod
 ### hyper parametes
 
 the fllowing parameters are set manually.
+
 $$
 \alpha_0,\alpha_1,\alpha_2, ..., \alpha_n
 $$
@@ -34,6 +35,7 @@ $$
 $$
 \sigma^2\left(t\right) = \frac{\left(1-\alpha_t\right)\left(1 - \bar{\alpha}_{t-1}\right)}{1-\bar{\alpha}_t}
 $$
+
 ### training
 
 the optimization goal of the Decoder is to predict $\mu_t$, so that it is as possible with the target.
