@@ -91,7 +91,7 @@ Train :: Epoch: 1/30:   9%|█▏          | 42/469 [00:06<00:49,  8.61it/s, Los
 
 ## MNIST Demo
 
-<img src=./imgs/mnist_sd.gif width="60%" align="middle"/>
+<div align=center><img src=./imgs/mnist_sd.gif width="60%" align="middle"/></div>
 
 ## Reference
 
