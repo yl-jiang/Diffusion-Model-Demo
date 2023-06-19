@@ -113,7 +113,7 @@ def train():
     total_epochs = TrainingConfig.NUM_EPOCHS + 1
     log_dir, checkpoint_dir = setup_log_directory(config=BaseConfig())
 
-    generate_video = True
+    generate_video = False
     ext = ".mp4" if generate_video else ".png"
 
     for epoch in range(1, total_epochs):

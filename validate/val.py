@@ -9,6 +9,8 @@ from model import UNet
 import os
 from pathlib import Path
 from datetime import datetime
+import cv2
+import numpy as np
 
 __all__ = ['reverse_diffusion']
 
@@ -26,8 +28,7 @@ def reverse_diffusion(model,
     x = torch.randn((num_images, *img_shape), device=device)
     model.eval()
 
-    if kwargs.get("generate_video", False):
-        outs = []
+    outs = []
 
     for time_step in tqdm(iterable=reversed(range(1, timesteps)), total=timesteps-1, dynamic_ncols=False, desc="Sampling :: ", position=0):
         ts = torch.ones(num_images, dtype=torch.long, device=device) * time_step
@@ -43,20 +44,23 @@ def reverse_diffusion(model,
              * (x - (beta_t / sqrt_one_minus_alpha_bar_t) * predicted_noise)
              + torch.sqrt(beta_t) * z)
 
-        if kwargs.get("generate_video", False):
-            x_inv = inverse_transform(x).type(torch.uint8)
-            grid  = torchvision.utils.make_grid(x_inv, nrow=nrow, pad_value=255.0).to("cpu")
-            ndarr = torch.permute(grid, (1, 2, 0)).numpy()[:, :, ::-1]
-            outs.append(ndarr)
+        x_inv = inverse_transform(x).type(torch.uint8)
+        grid  = torchvision.utils.make_grid(x_inv, nrow=nrow, pad_value=255.0).to("cpu")
+        ndarr = torch.permute(grid, (1, 2, 0)).numpy()[:, :, ::-1]
+        outs.append(ndarr)
+        
 
     if kwargs.get("generate_video", False): # Generate and save video of the entire reverse process. 
         frames2vid(outs, save_path)
         return None
     else: # Display and save the image at the final timestep of the reverse process. 
-        x = inverse_transform(x).type(torch.uint8)
-        grid = torchvision.utils.make_grid(x, nrow=nrow, pad_value=255.0).to("cpu")
-        pil_image = TF.functional.to_pil_image(grid)
-        pil_image.save(save_path, format=save_path[-3:].upper())
+        # x = inverse_transform(x).type(torch.uint8)
+        # grid = torchvision.utils.make_grid(x, nrow=nrow, pad_value=255.0).to("cpu")
+        # pil_image = TF.to_pil_image(grid)
+        # pil_image.save(save_path, format=save_path[-3:].upper())
+        for i, im in enumerate(outs):
+            img = im.astype(np.uint8)
+            cv2.imwrite(f"{Path(save_path).parent / f'{i}.png'}", img)
         return None
     
 

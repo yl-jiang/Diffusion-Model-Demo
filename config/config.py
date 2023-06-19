@@ -12,7 +12,7 @@ def get_default_device():
 @dataclass
 class BaseConfig:
     DEVICE = get_default_device()
-    DATASET = "Cifar-10" #  "MNIST", "Cifar-10", "Cifar-100", "Flowers"
+    DATASET = "MNIST" #  "MNIST", "Cifar-10", "Cifar-100", "Flowers"
     
     # For logging inferece images and saving checkpoints.
     root_log_dir = os.path.join("Logs_Checkpoints", "Inference")
