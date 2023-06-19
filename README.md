@@ -24,9 +24,11 @@ $$
 
 the fllowing parameters are computing from above parametes.
 
+
 $$
 \bar{\alpha}_t = \prod_{i=1}^t{\alpha_i}
 $$
+
 
 $$ 
 x_t = \sqrt{\bar{\alpha_t}}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon_0;\quad \epsilon_0 \sim \mathcal{N}\left(x_t; \sqrt{\bar{\alpha}_t}x_0, \left(1-\bar{\alpha_t}\right)\mathbf{I}\right)
@@ -40,6 +42,7 @@ $$
 
 the optimization goal of the Decoder is to predict $\mu_t$, so that it is as possible with the target.
 
+
 $$
 \mu_{target} = \frac{\sqrt{\alpha_t}\left(1 - \bar{\alpha}_{t-1}\right)x_t+\sqrt{\bar{\alpha}_{t-1}}\left(1-\alpha_t\right)x_0}{1-\bar{\alpha}_t}
 $$
@@ -49,13 +52,16 @@ $$
 \mu_{prediction} = \frac{\sqrt{\alpha_t}\left(1 - \bar{\alpha}_{t-1}\right)x_t+\sqrt{\bar{\alpha}_{t-1}}\left(1-\alpha_t\right)\hat{x}_{\theta}\left(x_t, t\right)}{1-\bar{\alpha}_t}
 $$
 
+
 $\hat{x}_{\theta}\left(x_t, t\right)$ is the Decoder(a.k.a Unet with Multi Head Self-Attention).
 
 loss function is:
 
+
 $$
 \log{p(x)} = \mathbb{E_{q\left(x_1|x_0\right)}}\left[\log{p_{\theta}}(x_0|x_1)\right] - D_{KL}\left(q(x_T|x_0)||p(x_T)\right) - \sum_{t=2}^T{\mathbb{E}_{q(x_t|x_0)}\left[D_{KL}(q(x_{t-1}|x_t, x_0))||p_{\theta}(x_{t-1}|x_t)\right]}
 $$
+
 
 the last term is diffusion process.
 
