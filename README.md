@@ -14,15 +14,15 @@ This repository is pytorch implement of ```Denoising Diffusion Probabilistic Mod
 
 ## math
 
-### hyper parametes
+### hyper parameters
 
-the fllowing parameters are set manually.
+the following parameters are set manually.
 
 $$
 \alpha_0,\alpha_1,\alpha_2, ..., \alpha_n
 $$
 
-the fllowing parameters are computing from above parametes.
+the following parameters are computed from the above parameters.
 
 
 $$
@@ -40,7 +40,7 @@ $$
 
 ### training
 
-the optimization goal of the Decoder is to predict $\mu_t$, so that it is as possible with the target.
+the optimization goal of the Decoder is to predict $\mu_t$ so that it is as possible with the target.
 
 
 $$
@@ -55,7 +55,7 @@ $$
 
 $\hat{x}_{\theta}\left(x_t, t\right)$ is the Decoder(a.k.a Unet with Multi Head Self-Attention).
 
-loss function is:
+the loss function is:
 
 
 $$
@@ -63,7 +63,7 @@ $$
 $$
 
 
-the last term is diffusion process.
+the last term is a diffusion process.
 
 ### inference
 
