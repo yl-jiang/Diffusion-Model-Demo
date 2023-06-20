@@ -63,7 +63,7 @@ $$
 $$
 
 
-the last term is a diffusion process.
+We ignore optimizing the first term when training, because we don't add noise in the first step (let $x_1 = x_0$). The second term has no trainable parameters. The last term is the diffusion process.
 
 ### inference
 
